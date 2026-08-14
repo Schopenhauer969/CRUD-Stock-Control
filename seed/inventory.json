@@ -1,0 +1,12 @@
+[
+  { "name": "Face Wash", "barcode": "855", "categoryName": "Cleansers", "costPrice": 5, "sellPrice": 8.99, "stock": 5 },
+  { "name": "Cleansing Oil", "barcode": "856", "categoryName": "Cleansers", "costPrice": 7, "sellPrice": 12.5, "stock": 0 },
+  { "name": "Face Cream", "barcode": "857", "categoryName": "Moisturizers", "costPrice": 9, "sellPrice": 15, "stock": 0 },
+  { "name": "Body Lotion", "barcode": "858", "categoryName": "Moisturizers", "costPrice": 6, "sellPrice": 10, "stock": 0 },
+  { "name": "Repair Serum", "barcode": "859", "categoryName": "Treatments", "costPrice": 15, "sellPrice": 25, "stock": 20 },
+  { "name": "Spot Treatment", "barcode": "860", "categoryName": "Treatments", "costPrice": 10, "sellPrice": 18, "stock": 15 },
+  { "name": "Sunscreen SPF50", "barcode": "861", "categoryName": "Sun Protection", "costPrice": 8, "sellPrice": 14, "stock": 30 },
+  { "name": "After Sun Gel", "barcode": "862", "categoryName": "Sun Protection", "costPrice": 6, "sellPrice": 11, "stock": 10 },
+  { "name": "Acne Gel", "barcode": "863", "categoryName": "Specialized Care", "costPrice": 9, "sellPrice": 16, "stock": 12 },
+  { "name": "Eye Cream", "barcode": "864", "categoryName": "Specialized Care", "costPrice": 13, "sellPrice": 22, "stock": 8 }
+]

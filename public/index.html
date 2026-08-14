@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Skin Glow POS</title>
+    <link rel="icon" type="image/jpeg" href="logo.jpg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link href="css.css" rel="stylesheet" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+  </head>
+  <body>
+    <div id="toast"></div>
+
+    <!-- CONFIRM MODAL -->
+    <div class="modal-overlay" id="confirmModal">
+      <div class="modal">
+        <h3>Confirm Delete</h3>
+        <p id="confirmMessage">Are you sure you want to delete this item?</p>
+        <div class="modal-actions">
+          <button
+            class="btn-cancel visible"
+            style="margin-top: 0"
+            id="confirmCancel"
+          >
+            Cancel
+          </button>
+          <button
+            class="btn-primary"
+            id="confirmOk"
+            style="background: var(--red)"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <!-- SIDEBAR -->
+      <aside class="sidebar">
+        <main class="br">
+          <div class="logo">
+            <div class="logo-icon">
+              <img class="logo-image" src="logo.jpg" />
+            </div>
+            <h2>SKIN GLOW</h2>
+          </div>
+          <ul class="menu">
+            <li class="active" data-page="dashboard">
+              <i data-lucide="layout-dashboard"></i> Dashboard
+            </li>
+            <li data-page="category">
+              <i data-lucide="layers-3"></i> Categories
+            </li>
+            <li data-page="inventory">
+              <i data-lucide="package"></i> Inventory
+            </li>
+            <li data-page="supplier"><i data-lucide="truck"></i> Supplier</li>
+            <li data-page="purchase">
+              <i data-lucide="shopping-cart"></i> Purchase
+            </li>
+            <li data-page="sales">
+              <i data-lucide="badge-dollar-sign"></i> Sales
+            </li>
+          </ul>
+        </main>
+      </aside>
+
+      <!-- MAIN -->
+      <main class="main">
+        <!-- ===== DASHBOARD ===== -->
+        <div class="page active-page" id="dashboard">
+          <div class="page-header">
+            <h1>Dashboard Overview</h1>
+            <p>Welcome back! Here's what's happening today.</p>
+          </div>
+          <div class="stats">
+            <div class="card">
+              <div class="card-top">
+                <div class="card-icon"><i data-lucide="trending-up"></i></div>
+                <h3>Total Income</h3>
+              </div>
+              <h2 id="totalAmount">$0</h2>
+              <span>from sales</span>
+            </div>
+            <div class="card">
+              <div class="card-top">
+                <div class="card-icon"><i data-lucide="package"></i></div>
+                <h3>Stock Items</h3>
+              </div>
+              <h2 id="totalStock">0</h2>
+              <span>products</span>
+            </div>
+            <div class="card">
+              <div class="card-top">
+                <div class="card-icon"><i data-lucide="shopping-cart"></i></div>
+                <h3>Purchases</h3>
+              </div>
+              <h2 id="purchaseRecord">0</h2>
+              <span>records</span>
+            </div>
+            <div class="card">
+              <div class="card-top">
+                <div class="card-icon">
+                  <i data-lucide="badge-dollar-sign"></i>
+                </div>
+                <h3>Sales</h3>
+              </div>
+              <h2 id="saleRecord">0</h2>
+              <span>transactions</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== CATEGORY ===== -->
+        <div class="page" id="category">
+          <div class="page-header">
+            <h1>Categories</h1>
+            <p>Manage your product categories</p>
+          </div>
+
+          <div class="panel">
+            <h2 id="cat-form-title">Add Category</h2>
+            <div class="input-group">
+              <label>Category Name *</label>
+              <input type="text" id="catName" placeholder="e.g. Face Care" />
+            </div>
+            <div class="input-group">
+              <label>Description</label>
+              <textarea
+                id="catDesc"
+                placeholder="Short description..."
+              ></textarea>
+            </div>
+            <input type="hidden" id="catEditId" />
+            <button class="btn-primary" id="saveBtn" onclick="saveCategory()">
+              Save Category
+            </button>
+            <button
+              class="btn-cancel"
+              id="catCancelBtn"
+              onclick="cancelCategory()"
+            >
+              Cancel Edit
+            </button>
+          </div>
+
+          <div class="panel">
+            <h2>Category List</h2>
+            <div class="search-box">
+              <svg
+                class="search-icon"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+              <input
+                type="text"
+                id="catSearch"
+                placeholder="Search category..."
+                oninput="renderCategories()"
+              />
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Category Name</th>
+                    <th>Description</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="catBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== INVENTORY ===== -->
+        <div class="page" id="inventory">
+          <div class="page-header">
+            <h1>Inventory</h1>
+            <p>Track and manage your products</p>
+          </div>
+
+          <div class="panel">
+            <h2 id="inv-form-title">Add Product</h2>
+            <div class="input-group">
+              <label>Product Name *</label>
+              <input type="text" id="invName" placeholder="e.g. Face Cream" />
+            </div>
+            <div class="input-group">
+              <label>Barcode</label>
+              <input type="text" id="invBarcode" placeholder="e.g. 855" />
+            </div>
+            <div class="input-group">
+              <label>Category</label>
+              <select id="invCategory">
+                <option value="">-- Select Category --</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label>Stock Quantity *</label>
+              <input type="number" id="invQty" placeholder="e.g. 50" min="0" />
+            </div>
+            <div class="input-group">
+              <label>Cost Price ($)</label>
+              <input
+                type="number"
+                id="invCost"
+                placeholder="e.g. 6.00"
+                min="0"
+                step="0.01"
+              />
+            </div>
+            <div class="input-group">
+              <label>Sell Price ($) *</label>
+              <input
+                type="number"
+                id="invPrice"
+                placeholder="e.g. 12.99"
+                min="0"
+                step="0.01"
+              />
+            </div>
+            <input type="hidden" id="invEditId" />
+            <button class="btn-primary" onclick="saveInventory()">
+              Save Product
+            </button>
+            <button
+              class="btn-cancel"
+              id="invCancelBtn"
+              onclick="cancelInventory()"
+            >
+              Cancel Edit
+            </button>
+          </div>
+
+          <div class="panel">
+            <h2>Inventory List</h2>
+            <div class="search-box">
+              <svg
+                class="search-icon"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+              <input
+                type="text"
+                id="invSearch"
+                placeholder="Search product..."
+                oninput="renderInventory()"
+              />
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Product</th>
+                    <th>Barcode</th>
+                    <th>Category</th>
+                    <th>Stock</th>
+                    <th>Price</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="invBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== SUPPLIER ===== -->
+        <div class="page" id="supplier">
+          <div class="page-header">
+            <h1>Suppliers</h1>
+            <p>Manage your product suppliers</p>
+          </div>
+
+          <div class="panel">
+            <h2 id="sup-form-title">Add Supplier</h2>
+            <div class="input-group">
+              <label>Supplier Name *</label>
+              <input
+                type="text"
+                id="supName"
+                placeholder="e.g. Beauty Wholesale Co."
+              />
+            </div>
+            <div class="input-group">
+              <label>Phone *</label>
+              <input
+                type="text"
+                id="supPhone"
+                placeholder="e.g. +855 12 345 678"
+              />
+            </div>
+            <div class="input-group">
+              <label>Address</label>
+              <textarea
+                id="supAddress"
+                placeholder="Street, City, Country..."
+              ></textarea>
+            </div>
+            <input type="hidden" id="supEditId" />
+            <button class="btn-primary" onclick="saveSupplier()">
+              Save Supplier
+            </button>
+            <button
+              class="btn-cancel"
+              id="supCancelBtn"
+              onclick="cancelSupplier()"
+            >
+              Cancel Edit
+            </button>
+          </div>
+
+          <div class="panel">
+            <h2>Supplier List</h2>
+            <div class="search-box">
+              <svg
+                class="search-icon"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+              <input
+                type="text"
+                id="supSearch"
+                placeholder="Search supplier..."
+                oninput="renderSuppliers()"
+              />
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Supplier Name</th>
+                    <th>Phone</th>
+                    <th>Address</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="supBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== PURCHASE ===== -->
+        <div class="page" id="purchase">
+          <div class="page-header">
+            <h1>Purchase</h1>
+            <p>
+              Record product purchases from suppliers (automatically restocks
+              inventory)
+            </p>
+          </div>
+
+          <div class="panel">
+            <h2 id="pur-form-title">Add Purchase</h2>
+            <div class="input-group">
+              <label>Product *</label>
+              <select id="purProduct">
+                <option value="">-- Select Product --</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label>Supplier *</label>
+              <select id="purSupplier">
+                <option value="">-- Select Supplier --</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label>Quantity *</label>
+              <input type="number" id="purQty" placeholder="e.g. 100" min="1" />
+            </div>
+            <div class="input-group">
+              <label>Total Cost ($) *</label>
+              <input
+                type="number"
+                id="purCost"
+                placeholder="e.g. 500.00"
+                min="0"
+                step="0.01"
+              />
+            </div>
+            <div class="input-group">
+              <label>Date *</label>
+              <input type="date" id="purDate" />
+            </div>
+            <input type="hidden" id="purEditId" />
+            <button class="btn-primary" onclick="savePurchase()">
+              Save Purchase
+            </button>
+            <button
+              class="btn-cancel"
+              id="purCancelBtn"
+              onclick="cancelPurchase()"
+            >
+              Cancel Edit
+            </button>
+          </div>
+
+          <div class="panel">
+            <h2>Purchase List</h2>
+            <div class="search-box">
+              <svg
+                class="search-icon"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+              <input
+                type="text"
+                id="purSearch"
+                placeholder="Search purchases..."
+                oninput="renderPurchases()"
+              />
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Product</th>
+                    <th>Supplier</th>
+                    <th>Qty</th>
+                    <th>Cost</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="purBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== SALES ===== -->
+        <div class="page" id="sales">
+          <div class="page-header">
+            <h1>Sales</h1>
+            <p>
+              Record and track product sales (automatically deducts inventory
+              stock)
+            </p>
+          </div>
+
+          <div class="panel">
+            <h2 id="sal-form-title">Add Sale</h2>
+            <div class="input-group">
+              <label>Customer Name *</label>
+              <input
+                type="text"
+                id="salCustomer"
+                placeholder="e.g. Maria Santos"
+              />
+            </div>
+            <div class="input-group">
+              <label>Product *</label>
+              <select id="salProduct">
+                <option value="">-- Select Product --</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label>Quantity *</label>
+              <input type="number" id="salQty" placeholder="e.g. 2" min="1" />
+            </div>
+            <div class="input-group">
+              <label>Sale Price ($) *</label>
+              <input
+                type="number"
+                id="salPrice"
+                placeholder="e.g. 25.00"
+                min="0"
+                step="0.01"
+              />
+            </div>
+            <div class="input-group">
+              <label>Date *</label>
+              <input type="date" id="salDate" />
+            </div>
+            <input type="hidden" id="salEditId" />
+            <button class="btn-primary" onclick="saveSale()">Save Sale</button>
+            <button class="btn-cancel" id="salCancelBtn" onclick="cancelSale()">
+              Cancel Edit
+            </button>
+          </div>
+
+          <div class="panel">
+            <h2>Sales List</h2>
+            <div class="search-box">
+              <svg
+                class="search-icon"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+              <input
+                type="text"
+                id="salSearch"
+                placeholder="Search sales..."
+                oninput="renderSales()"
+              />
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Customer</th>
+                    <th>Product</th>
+                    <th>Qty</th>
+                    <th>Total</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="salBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+    <script src="index.js"></script>
+  </body>
+</html>

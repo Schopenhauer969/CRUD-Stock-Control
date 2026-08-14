@@ -1,0 +1,7 @@
+[
+  { "name": "Cleansers", "description": "Cleansing and face washing products" },
+  { "name": "Moisturizers", "description": "Skin moisturizing and hydrating products" },
+  { "name": "Treatments", "description": "Skin treatment and repair products" },
+  { "name": "Sun Protection", "description": "Products that protect skin from sun damage" },
+  { "name": "Specialized Care", "description": "Special care products for specific skin needs" }
+]

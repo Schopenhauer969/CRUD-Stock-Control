@@ -1,7 +1,9 @@
+require("dotenv").config(); // <--- MOVE THIS TO LINE 1
+
 const express = require("express");
 const path = require("path");
 const connectDB = require("./config/db");
-require("dotenv").config();
+
 const app = express();
 
 // =====================
