@@ -423,6 +423,10 @@ body {
   font-family: "Inter", sans-serif;
   font-weight: 700;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
   transition:
     box-shadow 0.15s,
     transform 0.1s,
@@ -447,6 +451,10 @@ body {
   font-family: "Inter", sans-serif;
   font-weight: 700;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
   transition:
     background 0.15s,
     border-color 0.15s,
@@ -517,6 +525,49 @@ body {
   overflow-x: auto;
   border: 1.5px solid var(--border);
   border-radius: var(--radius-sm);
+}
+
+/* Maintain natural table structure to keep border lines perfectly aligned */
+table td,
+table th {
+  display: table-cell !important;
+  white-space: nowrap !important;
+  vertical-align: middle !important;
+  padding: 10px 10px;
+  font-size: 12px;
+}
+
+/* Ensure the action column cell stays intact as a table-cell */
+table td:last-child {
+  display: table-cell !important;
+  white-space: nowrap !important;
+  width: 1% !important;
+}
+
+/* Align buttons horizontally INSIDE the td container without breaking td border */
+table td:last-child > *,
+.action-buttons {
+  display: inline-flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 8px !important;
+  white-space: nowrap !important;
+}
+
+/* Button sizing resets */
+.action-buttons button,
+.action-buttons .btn,
+.action-buttons a,
+table td:last-child button,
+table td:last-child .btn {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  width: auto !important;
+  min-width: auto !important;
+  flex: 0 0 auto !important;
+  margin: 0 !important;
 }
 
 table {
@@ -590,9 +641,11 @@ table tbody tr:hover td {
   border: 1.5px solid rgba(255, 255, 255, 0.1);
 }
 
-#toast.show {
+#toast.show,
+#toast.active {
   opacity: 1;
   transform: translateY(0);
+  pointer-events: auto;
 }
 #toast.success {
   background: linear-gradient(135deg, var(--green-dark), var(--green));
@@ -669,7 +722,9 @@ table tbody tr:hover td {
   justify-content: center;
 }
 
-.modal-overlay.open {
+.modal-overlay.open,
+.modal-overlay.show,
+.modal-overlay.active {
   display: flex;
 }
 
@@ -699,60 +754,117 @@ table tbody tr:hover td {
 .modal-actions {
   display: flex;
   gap: 10px;
+  align-items: center;
 }
-.modal-actions button {
+.modal-actions button,
+.modal-actions .btn {
   flex: 1;
   margin-top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
-/* RESPONSIVE */
-@media (max-width: 900px) {
+@media (max-width: 1000px) {
   .container {
     flex-direction: column;
   }
+
+  .main {
+    padding: 16px 12px 90px 12px;
+  }
+
   .sidebar {
     width: 100%;
     height: auto;
     position: static;
-    flex-direction: row;
-    flex-wrap: wrap;
     padding: 12px;
+    margin-bottom: 10px;
   }
-  .logo {
-    margin-bottom: 0;
-    margin-right: 12px;
-  }
-  .logo h2::after {
-    display: none;
-  }
+
   .menu {
     display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-  }
-  .menu li {
-    padding: 8px 12px;
-    font-size: 12.5px;
-    margin-bottom: 0;
-  }
-  .main {
-    padding: 18px;
-  }
-  .page-header h1 {
-    font-size: 21px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    background-color: #ffffff;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    padding: 10px 10px max(16px, env(safe-area-inset-bottom)) 10px;
   }
 }
 
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .table-wrap {
+    -webkit-overflow-scrolling: touch;
+    overflow-x: auto;
+    margin-bottom: 20px;
+  }
+
+  table th,
+  table td {
+    padding: 10px 10px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  table td:last-child {
+    white-space: nowrap;
+  }
+
+  .action-buttons {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 8px !important;
+    width: max-content !important;
+    white-space: nowrap !important;
+  }
+
+  .action-buttons button,
+  .action-buttons .btn,
+  .action-buttons a {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    width: auto !important;
+    min-width: auto !important;
+    max-width: none !important;
+    flex: 0 0 auto !important;
+    margin: 0 !important;
+  }
+}
+@media (min-width: 100px) and (max-width: 1000px) {
+  #toast {
+    top: 24px !important;
+    right: 24px !important;
+    bottom: auto !important;
+    left: auto !important;
+    transform: translateY(-10px) !important;
+  }
+
+  #toast.show,
+  #toast.active {
+    transform: translateY(0) !important;
+  }
+}
 @media (max-width: 600px) {
   /* LAYOUT & CONTAINERS */
-
   .main {
-    padding: 16px 12px;
+    padding: 16px 12px 90px 12px;
   }
+
   .br {
     display: grid;
     gap: 20px;
   }
+
   /* SIDEBAR & NAVIGATION */
   .sidebar {
     padding: 12px;
@@ -776,7 +888,6 @@ table tbody tr:hover td {
     font-size: 18px;
   }
 
-  /* Convert menu into a horizontal swipeable bar on phones */
   .menu {
     display: flex;
     flex-wrap: nowrap;
@@ -798,19 +909,14 @@ table tbody tr:hover td {
     list-style: none;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
 
-    /* 1. Add extra bottom padding inside the white bar */
     padding-top: 10px;
     padding-left: 10px;
     padding-right: 10px;
-    padding-bottom: 28px; /* Increments height to clear iOS indicator */
-
-    /* 2. Alternative: If you want the white bar floating slightly off the bottom edge */
-    /* padding: 10px; */
-    /* bottom: 12px; */
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
   }
 
   .menu::-webkit-scrollbar {
-    display: none; /* Hide scrollbar Chrome/Safari */
+    display: none;
   }
 
   .menu li {
@@ -823,7 +929,7 @@ table tbody tr:hover td {
     text-align: center;
   }
 
-  /* PAGE HEADERS */
+  /* PAGE HEADERS & STATS */
   .page-header {
     margin-bottom: 16px;
   }
@@ -836,7 +942,6 @@ table tbody tr:hover td {
     font-size: 12.5px;
   }
 
-  /* DASHBOARD STATS (2-Column Compact Grid) */
   .stats {
     grid-template-columns: repeat(1, 1fr);
     gap: 20px;
@@ -876,7 +981,7 @@ table tbody tr:hover td {
     font-size: 11px;
   }
 
-  /* PANELS & FORMS */
+  /* PANELS & INPUTS */
   .panel {
     padding: 16px;
     margin-bottom: 14px;
@@ -893,7 +998,6 @@ table tbody tr:hover td {
     margin-bottom: 14px;
   }
 
-  /* Set font-size to 16px to prevent iOS Safari auto-zooming on focus */
   .input-group input,
   .input-group textarea,
   .input-group select,
@@ -906,49 +1010,124 @@ table tbody tr:hover td {
     padding-left: 36px;
   }
 
-  /* BUTTONS & TOUCH TARGETS */
+  #purDate,
+  #salDate {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
   .btn-primary {
     padding: 14px;
     font-size: 14px;
     display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
   }
 
   .btn-secondary {
     padding: 8px 10px;
     font-size: 11.5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
   }
 
-  /* TABLES & SCROLLING */
+  /* TABLES & ACTION BUTTONS */
   .table-wrap {
     -webkit-overflow-scrolling: touch;
+    overflow-x: auto;
+    margin-bottom: 20px;
   }
 
   table th,
   table td {
     padding: 10px 10px;
     font-size: 12px;
+    white-space: nowrap;
   }
 
-  /* MODAL & TOAST NOTIFICATIONS */
-  #toast {
-    left: 16px;
-    right: 16px;
-    bottom: 16px;
-    text-align: center;
-    padding: 12px 16px;
+  .address,
+  table td.address,
+  table td:nth-child(3) {
+    white-space: nowrap;
+    max-width: none;
   }
 
-  .modal {
-    padding: 20px;
-    width: 92%;
+  table td:nth-child(6),
+  .table-date {
+    white-space: nowrap;
   }
 
-  .modal-actions {
-    flex-direction: column-reverse;
+  table td:last-child {
+    white-space: nowrap;
+  }
+
+  table td:last-child,
+  .action-buttons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     gap: 8px;
   }
-  #purDate,
-  #salDate {
-    width: 92%;
+
+  table td:last-child button,
+  table td:last-child .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+  }
+
+  /* SCROLLBAR */
+  * {
+    scrollbar-width: thin;
+  }
+
+  /* CONFIRM DELETE MODAL */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
+
+  .modal-overlay .modal {
+    width: 85vw;
+    max-width: 340px;
+    background: #ffffff;
+    padding: 24px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
+  }
+
+  .modal-overlay .modal h3,
+  .modal-overlay .modal p {
+    text-align: center;
+  }
+
+  .modal-overlay .modal-actions,
+  .modal-overlay .btn-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  .modal-overlay .modal-actions button,
+  .modal-overlay .modal-actions .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
   }
 }
