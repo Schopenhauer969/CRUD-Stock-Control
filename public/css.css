@@ -765,7 +765,10 @@ table tbody tr:hover td {
   justify-content: center;
   text-align: center;
 }
-
+#purDate {
+  width: 100%;
+  box-sizing: border-box;
+}
 @media (max-width: 1000px) {
   .container {
     flex-direction: column;
@@ -1032,12 +1035,6 @@ table tbody tr:hover td {
     padding-left: 36px;
   }
 
-  #purDate,
-  #salDate {
-    width: 100%;
-    box-sizing: border-box;
-  }
-
   .btn-primary {
     padding: 14px;
     font-size: 14px;
@@ -1151,5 +1148,9 @@ table tbody tr:hover td {
     align-items: center;
     justify-content: center;
     text-align: center;
+  }
+  #purDate,
+  #salDate {
+    width: 92%;
   }
 }
